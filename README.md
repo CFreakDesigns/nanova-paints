@@ -4,7 +4,7 @@
 
 **A bilingual website for a nano-technology paint manufacturer**
 
-**[▶ Live demo](https://invisablesam-designs.github.io/nanova-paints/)**
+**[▶ Live demo](https://sam-designs-studio.github.io/nanova-paints/)**
 
 ![Nanova Paints — desktop](screenshots/desktop.png)
 
@@ -38,7 +38,7 @@ HTML5 · CSS3 · vanilla JavaScript — no frameworks, no build step.
 
 موقع لشركة تصنّع دهانات وطلاءات بتقنية النانو.
 
-**[▶ معاينة الموقع مباشرة](https://invisablesam-designs.github.io/nanova-paints/)**
+**[▶ معاينة الموقع مباشرة](https://sam-designs-studio.github.io/nanova-paints/)**
 
 > مشروع تصميمي تجريبي — تصميم وتطوير **Sam**. العلامة التجارية والمنتجات والأرقام والموزعون محتوى تجريبي.
 
