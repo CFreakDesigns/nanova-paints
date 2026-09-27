@@ -316,59 +316,6 @@
   ];
 
   /* ------------------------------------------------------------------------
-     CITIES (shared by dealer finder and contact form)
-     ------------------------------------------------------------------------ */
-  var cities = [
-    { id: 'riyadh', name: { ar: 'الرياض', en: 'Riyadh' } },
-    { id: 'jeddah', name: { ar: 'جدة', en: 'Jeddah' } },
-    { id: 'dammam', name: { ar: 'الدمام', en: 'Dammam' } },
-    { id: 'khobar', name: { ar: 'الخبر', en: 'Al Khobar' } },
-    { id: 'makkah', name: { ar: 'مكة المكرمة', en: 'Makkah' } },
-    { id: 'madinah', name: { ar: 'المدينة المنورة', en: 'Madinah' } },
-    { id: 'abha', name: { ar: 'أبها', en: 'Abha' } }
-  ];
-
-  /* ------------------------------------------------------------------------
-     DEALERS (fictional names & phone numbers)
-     ------------------------------------------------------------------------ */
-  var H_STD = { ar: 'السبت – الخميس، 9 ص – 10 م', en: 'Sat – Thu, 9 AM – 10 PM' };
-  var H_LONG = { ar: 'يوميًا، 9 ص – 11 م', en: 'Daily, 9 AM – 11 PM' };
-  var H_EARLY = { ar: 'السبت – الخميس، 7 ص – 9 م', en: 'Sat – Thu, 7 AM – 9 PM' };
-
-  var dealers = {
-    riyadh: [
-      { flagship: true, name: { ar: 'صالة Nanova الرئيسية', en: 'Nanova Flagship Showroom' }, district: { ar: 'حي العليا، طريق الملك فهد', en: 'Al Olaya, King Fahd Road' }, phone: '0500000011', hours: H_LONG },
-      { name: { ar: 'مؤسسة الألوان الحديثة', en: 'Modern Colors Est.' }, district: { ar: 'حي الملقا', en: 'Al Malqa' }, phone: '0500000012', hours: H_STD },
-      { name: { ar: 'مركز البناء المتكامل', en: 'Integrated Build Center' }, district: { ar: 'حي السلي', en: 'Al Sulay' }, phone: '0500000013', hours: H_EARLY }
-    ],
-    jeddah: [
-      { flagship: true, name: { ar: 'صالة Nanova – جدة', en: 'Nanova Showroom Jeddah' }, district: { ar: 'حي الروضة، شارع التحلية', en: 'Al Rawdah, Tahlia Street' }, phone: '0500000021', hours: H_LONG },
-      { name: { ar: 'دهانات البحر الأحمر', en: 'Red Sea Paints' }, district: { ar: 'حي الصفا', en: 'Al Safa' }, phone: '0500000022', hours: H_STD },
-      { name: { ar: 'مؤسسة واجهات جدة', en: 'Jeddah Facades Est.' }, district: { ar: 'حي الحمدانية', en: 'Al Hamdaniyah' }, phone: '0500000023', hours: H_EARLY }
-    ],
-    dammam: [
-      { flagship: true, name: { ar: 'صالة Nanova – الشرقية', en: 'Nanova Showroom Eastern Province' }, district: { ar: 'حي الشاطئ', en: 'Al Shati' }, phone: '0500000031', hours: H_LONG },
-      { name: { ar: 'مركز الخليج للدهانات', en: 'Gulf Paint Center' }, district: { ar: 'حي الفيصلية', en: 'Al Faisaliyah' }, phone: '0500000032', hours: H_STD }
-    ],
-    khobar: [
-      { name: { ar: 'ألوان الساحل', en: 'Coastline Colors' }, district: { ar: 'حي العقربية', en: 'Al Aqrabiyah' }, phone: '0500000041', hours: H_STD },
-      { name: { ar: 'مؤسسة الواجهة البحرية', en: 'Waterfront Supplies Est.' }, district: { ar: 'حي اليرموك', en: 'Al Yarmouk' }, phone: '0500000042', hours: H_EARLY }
-    ],
-    makkah: [
-      { name: { ar: 'مؤسسة أم القرى للدهانات', en: 'Umm Al-Qura Paints Est.' }, district: { ar: 'حي العزيزية', en: 'Al Aziziyah' }, phone: '0500000051', hours: H_STD },
-      { name: { ar: 'مركز الشرائع للبناء', en: 'Al Sharaie Build Center' }, district: { ar: 'حي الشرائع', en: 'Al Sharaie' }, phone: '0500000052', hours: H_EARLY }
-    ],
-    madinah: [
-      { name: { ar: 'دهانات طيبة', en: 'Taibah Paints' }, district: { ar: 'حي قباء', en: 'Quba' }, phone: '0500000061', hours: H_STD },
-      { name: { ar: 'مركز العيون للمواد', en: 'Al Uyun Materials Center' }, district: { ar: 'حي العيون', en: 'Al Uyun' }, phone: '0500000062', hours: H_LONG }
-    ],
-    abha: [
-      { name: { ar: 'ألوان الجنوب', en: 'Southern Colors' }, district: { ar: 'حي المنسك', en: 'Al Mansak' }, phone: '0500000071', hours: H_STD },
-      { name: { ar: 'مركز السودة للبناء', en: 'Al Soudah Build Center' }, district: { ar: 'حي الخالدية', en: 'Al Khalidiyah' }, phone: '0500000072', hours: H_EARLY }
-    ]
-  };
-
-  /* ------------------------------------------------------------------------
      PROJECTS (fictional case studies)
      cat: residential | public | commercial
      ------------------------------------------------------------------------ */
@@ -476,8 +423,6 @@
     products: products,
     colorFamilies: colorFamilies,
     colors: colors,
-    cities: cities,
-    dealers: dealers,
     projects: projects
   };
 })();

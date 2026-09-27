@@ -10,7 +10,7 @@
 
 </div>
 
-> Concept design project — designed and developed by **Sam**. Nanova Paints is a fictional brand; products, figures and dealers are sample content.
+> Concept design project — designed and developed by **Sam**. Nanova Paints is a fictional brand; products and figures are sample content.
 
 ## Features
 
@@ -21,7 +21,7 @@
 - **Product catalogue** — filter by use, with detailed spec pop-ups
 - **Color studio** — pick from 24 colors to repaint an illustrated room live, and save favourites
 - **Paint calculator** — room size, doors, windows and coats → litres needed and the best can combination
-- **Projects gallery** with lightbox, **dealer finder** by city, FAQ and a validated quote-request form
+- **Projects gallery** with lightbox and an FAQ
 - **Responsive & accessible** — phones to wide screens, keyboard friendly, respects reduced-motion settings
 
 ## Built with
@@ -40,7 +40,7 @@ HTML5 · CSS3 · vanilla JavaScript — no frameworks, no build step.
 
 **[▶ معاينة الموقع مباشرة](https://sam-designs-studio.github.io/nanova-paints/)**
 
-> مشروع تصميمي تجريبي — تصميم وتطوير **Sam**. العلامة التجارية والمنتجات والأرقام والموزعون محتوى تجريبي.
+> مشروع تصميمي تجريبي — تصميم وتطوير **Sam**. العلامة التجارية والمنتجات والأرقام محتوى تجريبي.
 
 ### المزايا
 
@@ -51,7 +51,7 @@ HTML5 · CSS3 · vanilla JavaScript — no frameworks, no build step.
 - **كتالوج المنتجات** — فلترة حسب الاستخدام مع نوافذ مواصفات تفصيلية
 - **استوديو الألوان** — اختر من بين 24 لونًا لإعادة طلاء غرفة توضيحية مباشرة واحفظ ألوانك المفضلة
 - **حاسبة الدهان** — مقاسات الغرفة والأبواب والنوافذ وعدد الطبقات لحساب اللترات وأفضل تركيبة عبوات
-- **معرض المشاريع** مع عارض صور، و**البحث عن الموزعين** حسب المدينة، وأسئلة شائعة، ونموذج طلب عرض سعر
+- **معرض المشاريع** مع عارض صور، وأسئلة شائعة
 - **تصميم متجاوب وسهل الاستخدام** — من الجوال حتى الشاشات العريضة، ويدعم التنقل بلوحة المفاتيح
 
 ### التقنيات المستخدمة

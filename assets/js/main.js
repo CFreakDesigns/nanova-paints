@@ -8,11 +8,11 @@
    02. i18n engine                     11. Color studio
    03. Scroll lock & modal manager     12. Paint calculator
    04. Header, mobile nav, scroll UI   13. Projects + lightbox
-   05. Scroll reveal & scrollspy       14. Dealer finder
-   06. Hero canvas (nano lattice)      15. FAQ accordion
-   07. Hero counters                   16. Quote form
-   08. Lotus-effect diagram            17. Footer
-   09. Before / after slider           18. Boot
+   05. Scroll reveal & scrollspy       14. FAQ accordion
+   06. Hero canvas (nano lattice)      15. Footer
+   07. Hero counters                   16. Boot
+   08. Lotus-effect diagram
+   09. Before / after slider
    ========================================================================== */
 (function () {
   'use strict';
@@ -186,6 +186,8 @@
     doc.title = t('meta.title');
     const desc = $('meta[name="description"]');
     if (desc) desc.setAttribute('content', t('meta.description'));
+    const ogTitle = $('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', t('meta.ogTitle'));
     const ogLocale = $('meta[property="og:locale"]');
     if (ogLocale) ogLocale.setAttribute('content', lang === 'ar' ? 'ar_SA' : 'en_US');
     /* The toggle shows the *other* language, so tag it accordingly */
@@ -277,7 +279,6 @@
   })();
 
   /* Cross-module hooks (assigned by the modules below) */
-  let prefillQuote = function () {};
   let openProduct = function () {};
   let setCalcProduct = function () {};
 
@@ -936,8 +937,7 @@
           '<div class="pm__prices">' + prices + '</div>' +
           '<p class="pm__note">' + esc(t('modal.priceNote')) + '</p>' +
           '<div class="pm__actions">' +
-            '<button class="btn btn--grad" type="button" data-quote="' + p.id + '"><span>' + esc(t('modal.quote')) + '</span>' + svgIcon('i-arrow', 'i-dir') + '</button>' +
-            '<button class="btn btn--soft" type="button" data-calc="' + p.id + '"><span>' + esc(t('modal.calc')) + '</span></button>' +
+            '<button class="btn btn--grad" type="button" data-calc="' + p.id + '"><span>' + esc(t('modal.calc')) + '</span>' + svgIcon('i-arrow', 'i-dir') + '</button>' +
           '</div>' +
         '</div>';
     }
@@ -957,13 +957,8 @@
 
     if (content) {
       content.addEventListener('click', (e) => {
-        const q = e.target.closest('[data-quote]');
         const c = e.target.closest('[data-calc]');
-        if (q) {
-          const p = productById(q.getAttribute('data-quote'));
-          Modal.close({ restoreFocus: false });
-          prefillQuote({ productId: p.id, message: t('contact.prefillProduct', { product: isoRaw(L(p.name)) }) });
-        } else if (c) {
+        if (c) {
           Modal.close({ restoreFocus: false });
           setCalcProduct(c.getAttribute('data-calc'));
         }
@@ -996,7 +991,6 @@
     const saveLabel = $('#saveColorLabel');
     const copyBtn = $('#copyColor');
     const copyLabel = $('#copyColorLabel');
-    const sampleBtn = $('#sampleColor');
     const favList = $('#favList');
     const favEmpty = $('#favEmpty');
     const favCount = $('#favCount');
@@ -1140,11 +1134,6 @@
       }
     });
 
-    sampleBtn.addEventListener('click', () => {
-      const c = byCode(selected);
-      prefillQuote({ message: t('studio.sampleMsg', { name: L(c.name), code: isoRaw(c.code) }) });
-    });
-
     renderPalette();
     renderFavs();
     apply();
@@ -1176,7 +1165,6 @@
     const rCost = $('#rCost');
     const invalidEl = $('#calcInvalid');
     const live = $('#calcLive');
-    const quoteBtn = $('#calcQuote');
 
     const DOOR = 0.9 * 2.1;
     const WINDOW = 1.2 * 1.2;
@@ -1357,19 +1345,6 @@
       });
     });
 
-    quoteBtn.addEventListener('click', () => {
-      if (!last) {
-        const firstBad = Object.keys(inputs).find((k) => errors[k]);
-        if (firstBad) inputs[firstBad].focus();
-        return;
-      }
-      prefillQuote({
-        productId: last.product.id,
-        area: Math.round(last.area),
-        message: t('contact.prefillCalc', { liters: fmt(last.liters, 1), product: isoRaw(L(last.product.name)), area: fmt(last.area, 1) })
-      });
-    });
-
     setCalcProduct = function (id) {
       if (!productById(id)) return;
       productSel.value = id;
@@ -1498,67 +1473,7 @@
   }
 
   /* ==========================================================================
-     14. DEALER FINDER
-     ========================================================================== */
-  function initDealers() {
-    const sel = $('#dealerCity');
-    const grid = $('#dealerGrid');
-    const count = $('#dealerCount');
-    if (!sel || !grid) return;
-    let city = store.get('nanova-city', 'riyadh');
-    if (!DATA.dealers[city]) city = 'riyadh';
-
-    const cities = DATA.cities.filter((c) => DATA.dealers[c.id]);
-    const total = cities.reduce((sum, c) => sum + DATA.dealers[c.id].length, 0);
-
-    function fill() {
-      sel.innerHTML = cities.map((c) => '<option value="' + c.id + '">' + esc(L(c.name)) + '</option>').join('');
-      sel.value = city;
-      const sc = $('#statCities');
-      const sd = $('#statDealers');
-      if (sc) sc.textContent = fmt(cities.length);
-      if (sd) sd.textContent = fmt(total);
-    }
-
-    function render() {
-      const cityObj = DATA.cities.find((c) => c.id === city);
-      const list = DATA.dealers[city] || [];
-      if (count) count.textContent = t('dealers.count', { n: fmt(list.length) });
-      grid.innerHTML = list.map((d, i) => {
-        const query = encodeURIComponent(d.district.en + ', ' + cityObj.name.en + ', Saudi Arabia');
-        const url = 'https://www.google.com/maps/search/?api=1&query=' + query;
-        const name = L(d.name);
-        return '<li><article class="dealer' + (d.flagship ? ' dealer--flagship' : '') + '" style="--i:' + i + '">' +
-          '<span class="chip dealer__type">' + esc(t(d.flagship ? 'dealers.flagship' : 'dealers.authorized')) + '</span>' +
-          '<h3 class="dealer__name">' + rich(name) + '</h3>' +
-          '<ul class="dealer__info">' +
-            '<li>' + svgIcon('i-pin') + '<span>' + esc(L(d.district) + listJoin() + L(cityObj.name)) + '</span></li>' +
-            '<li>' + svgIcon('i-phone') + '<a href="tel:' + d.phone + '" dir="ltr">' + d.phone + '</a></li>' +
-            '<li>' + svgIcon('i-clock') + '<span><span class="sr-only">' + esc(t('dealers.hours')) + ': </span>' + esc(L(d.hours)) + '</span></li>' +
-          '</ul>' +
-          '<div class="dealer__actions">' +
-            '<a class="btn btn--primary btn--sm" href="' + url + '" target="_blank" rel="noopener noreferrer">' + svgIcon('i-pin') +
-              '<span>' + esc(t('dealers.directions')) + '</span><span class="sr-only"> — ' + rich(name) + ' ' + esc(t('dealers.newTab')) + '</span>' + svgIcon('i-external') + '</a>' +
-            '<a class="btn btn--soft btn--sm" href="tel:' + d.phone + '">' + svgIcon('i-phone') +
-              '<span>' + esc(t('dealers.call')) + '</span><span class="sr-only"> — ' + rich(name) + '</span></a>' +
-          '</div>' +
-        '</article></li>';
-      }).join('');
-    }
-
-    sel.addEventListener('change', () => {
-      city = sel.value;
-      store.set('nanova-city', city);
-      render();
-    });
-
-    fill();
-    render();
-    onLang(() => { fill(); render(); });
-  }
-
-  /* ==========================================================================
-     15. FAQ ACCORDION
+     14. FAQ ACCORDION
      ========================================================================== */
   function initFaq() {
     $$('.acc').forEach((item) => {
@@ -1574,157 +1489,7 @@
   }
 
   /* ==========================================================================
-     16. QUOTE FORM — client-side validation, success modal (nothing is sent)
-     ========================================================================== */
-  function initForm() {
-    const form = $('#quoteForm');
-    if (!form) return;
-    const summary = $('#formSummary');
-    const counter = $('#fMessageCount');
-    const successModal = $('#successModal');
-    const successText = $('#successText');
-    const f = {
-      name: $('#fName'),
-      company: $('#fCompany'),
-      phone: $('#fPhone'),
-      email: $('#fEmail'),
-      city: $('#fCity'),
-      type: $('#fType'),
-      product: $('#fProduct'),
-      area: $('#fArea'),
-      message: $('#fMessage')
-    };
-    const TYPES = ['villa', 'residential', 'commercial', 'healthcare', 'education', 'industrial', 'other'];
-    const MAX_MSG = 1000;
-    let errors = {};
-    let attempted = false;
-    let lastPrefill = '';
-    let lastSuccess = null;
-
-    function fillSelects() {
-      const keep = { city: f.city.value, type: f.type.value, product: f.product.value };
-      f.city.innerHTML = '<option value="">' + esc(t('f.select')) + '</option>' +
-        DATA.cities.map((c) => '<option value="' + c.id + '">' + esc(L(c.name)) + '</option>').join('') +
-        '<option value="other">' + esc(t('f.otherCity')) + '</option>';
-      f.type.innerHTML = '<option value="">' + esc(t('f.select')) + '</option>' +
-        TYPES.map((k) => '<option value="' + k + '">' + esc(t('ptype.' + k)) + '</option>').join('');
-      f.product.innerHTML = '<option value="">' + esc(t('f.notSure')) + '</option>' +
-        DATA.products.map((p) => '<option value="' + p.id + '">' + esc(productOption(p)) + '</option>').join('');
-      f.city.value = keep.city;
-      f.type.value = keep.type;
-      f.product.value = keep.product;
-    }
-
-    const rules = {
-      name: (v) => (v.trim().length >= 2 ? null : 'err.name'),
-      phone: (v) => (/^05\d{8}$/.test(normalizeDigits(v).replace(/[\s-]/g, '')) ? null : 'err.phone'),
-      email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? null : 'err.email'),
-      city: (v) => (v ? null : 'err.city'),
-      type: (v) => (v ? null : 'err.type'),
-      area: (v) => {
-        const s = normalizeDigits(v).replace(/[\s,]/g, '').trim();
-        if (!s) return null;
-        const n = Number(s);
-        return isFinite(n) && n >= 1 && n <= 1000000 ? null : 'err.area';
-      },
-      message: (v) => (v.length <= MAX_MSG ? null : 'err.message')
-    };
-    const FIELDS = Object.keys(rules);
-
-    function paint(k) {
-      const el = f[k];
-      const errEl = $('#' + el.id + 'Err');
-      if (errors[k]) {
-        el.setAttribute('aria-invalid', 'true');
-        if (errEl) errEl.textContent = t(errors[k]);
-      } else {
-        el.removeAttribute('aria-invalid');
-        if (errEl) errEl.textContent = '';
-      }
-    }
-    function validate(k) {
-      const err = rules[k](f[k].value);
-      if (err) errors[k] = err; else delete errors[k];
-      paint(k);
-      if (summary && !summary.hidden && !Object.keys(errors).length) summary.hidden = true;
-      return !err;
-    }
-    /* Success message: the visitor's name and the reference are bidi-isolated */
-    function renderSuccess() {
-      if (!lastSuccess) return;
-      successText.innerHTML = esc(t('success.text', { name: '\u0001N\u0001', ref: '\u0001R\u0001' }))
-        .replace('\u0001N\u0001', '<bdi>' + esc(lastSuccess.name) + '</bdi>')
-        .replace('\u0001R\u0001', '<bdi>' + esc(lastSuccess.ref) + '</bdi>');
-    }
-    function updateCounter() {
-      const n = f.message.value.length;
-      counter.textContent = n + '/' + MAX_MSG;
-      counter.classList.toggle('is-over', n > MAX_MSG);
-    }
-
-    FIELDS.forEach((k) => {
-      const el = f[k];
-      el.addEventListener('blur', () => { if (attempted || el.value) validate(k); });
-      el.addEventListener('input', () => { if (errors[k]) validate(k); });
-      if (el.tagName === 'SELECT') el.addEventListener('change', () => { if (attempted || errors[k]) validate(k); });
-    });
-    f.phone.addEventListener('input', () => {
-      /* Accept Arabic-Indic digits and keep only phone characters */
-      const cleaned = normalizeDigits(f.phone.value).replace(/[^\d\s+-]/g, '');
-      if (cleaned !== f.phone.value) f.phone.value = cleaned;
-    });
-    f.message.addEventListener('input', updateCounter);
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      attempted = true;
-      errors = {};
-      const results = FIELDS.map(validate);
-      if (results.indexOf(false) > -1) {
-        summary.hidden = false;
-        summary.textContent = t('err.summary');
-        const first = FIELDS.find((k) => errors[k]);
-        if (first) f[first].focus();
-        return;
-      }
-      summary.hidden = true;
-      const ref = 'NV-' + new Date().getFullYear() + '-' + String(Math.floor(1000 + Math.random() * 9000));
-      lastSuccess = { name: f.name.value.trim().split(/\s+/)[0], ref: ref };
-      renderSuccess();
-      Modal.open(successModal, { opener: form.querySelector('[type="submit"]') });
-      form.reset();
-      attempted = false;
-      errors = {};
-      lastPrefill = '';
-      FIELDS.forEach(paint);
-      updateCounter();
-    });
-
-    prefillQuote = function (opts) {
-      if (opts.productId && productById(opts.productId)) f.product.value = opts.productId;
-      if (opts.area) f.area.value = String(opts.area);
-      if (opts.message) {
-        const cur = f.message.value.trim();
-        f.message.value = (!cur || cur === lastPrefill) ? opts.message : cur + '\n' + opts.message;
-        lastPrefill = f.message.value.trim();
-        updateCounter();
-      }
-      scrollToEl($('#contact'));
-      f.name.focus({ preventScroll: true });
-    };
-
-    fillSelects();
-    updateCounter();
-    onLang(() => {
-      fillSelects();
-      FIELDS.forEach(paint);
-      if (summary && !summary.hidden) summary.textContent = t('err.summary');
-      renderSuccess();
-    });
-  }
-
-  /* ==========================================================================
-     17. FOOTER
+     15. FOOTER
      ========================================================================== */
   function initFooter() {
     const list = $('#footerProducts');
@@ -1749,12 +1514,12 @@
   }
 
   /* ==========================================================================
-     18. BOOT
+     16. BOOT
      ========================================================================== */
   function init() {
     applyDocumentLanguage();
     const modules = [initHeader, initReveal, initScrollSpy, initHeroCanvas, initCounters, initLotus, initCompare,
-      initProducts, initStudio, initCalculator, initProjects, initDealers, initFaq, initForm, initFooter];
+      initProducts, initStudio, initCalculator, initProjects, initFaq, initFooter];
     modules.forEach((fn) => {
       try { fn(); } catch (err) {
         if (window.console && console.warn) console.warn('[Nanova] module failed:', fn.name, err);
